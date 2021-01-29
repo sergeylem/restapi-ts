@@ -1,21 +1,24 @@
-import {CommonRoutesConfig} from '../common/routes.config';
+import {IRoutesConfig} from '../common/routes.config';
 import express from 'express';
 
-export class UsersRoutes extends CommonRoutesConfig {
-  constructor(app: express.Application) {
-    super(app, 'UsersRoutes');
+export class ProductsRoutes implements IRoutesConfig {
+  app: express.Application
+  name: string;
+  constructor(app: express.Application, name: string) {
+    this.app = app;
+    this.name = name;
   }
 
   configureRoutes() {
-    this.app.route(`/users`)
+    this.app.route(`/products`)
         .get((req: express.Request, res: express.Response) => {
-            res.status(200).send(`List of users`);
+            res.status(200).send(`List of products`);
         })
         .post((req: express.Request, res: express.Response) => {
-            res.status(200).send(`Post to users`);
+            res.status(200).send(`Post to products`);
         });
 
-    this.app.route(`/users/:userId`)
+    this.app.route(`/products/:productId`)
         .all((req: express.Request, res: express.Response, next: express.NextFunction) => {
             // this middleware function runs before any request to /users/:userId
             // but it doesn't accomplish anything just yet---
@@ -23,18 +26,23 @@ export class UsersRoutes extends CommonRoutesConfig {
             next();
         })
         .get((req: express.Request, res: express.Response) => {
-            res.status(200).send(`GET requested for id ${req.params.userId}`);
+            res.status(200).send(`GET requested for productId ${req.params.productId}`);
         })
         .put((req: express.Request, res: express.Response) => {
-            res.status(200).send(`PUT requested for id ${req.params.userId}`);
+            res.status(200).send(`PUT requested for productId ${req.params.productId}`);
         })
         .patch((req: express.Request, res: express.Response) => {
-            res.status(200).send(`PATCH requested for id ${req.params.userId}`);
+            res.status(200).send(`PATCH requested for productId ${req.params.productId}`);
         })
         .delete((req: express.Request, res: express.Response) => {
-            res.status(200).send(`DELETE requested for id ${req.params.userId}`);
+            res.status(200).send(`DELETE requested for productId ${req.params.productId}`);
         });
 
     return this.app;  
   }
+
+  getName(): string {
+    return this.name;
+  };
+
 }
